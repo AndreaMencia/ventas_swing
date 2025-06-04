@@ -37,13 +37,12 @@ public class ControladorVentas {
      * @param monto
      */
     public void crearVenta(int id, int cedula, Map<Producto, Integer> productos, int monto) {
-        LocalDate fecha = LocalDate.now();
-        Cliente cliente = repositorioClientes.obtenerClientePorCI(cedula);
-        Venta nuevaVenta = new Venta(id, fecha, cliente, productos, monto);
-
         if (repositorioVentas.getVentas().containsKey(id)) {
             throw new IllegalArgumentException(YA_EXISTE_VENTA);
         }
+        LocalDate fecha = LocalDate.now();
+        Cliente cliente = repositorioClientes.obtenerClientePorCI(cedula);
+        Venta nuevaVenta = new Venta(id, fecha, cliente, productos, monto);
         repositorioVentas.guardarVenta(nuevaVenta);
     }
 

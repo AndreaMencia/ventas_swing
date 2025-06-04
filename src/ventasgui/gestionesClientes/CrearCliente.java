@@ -58,7 +58,7 @@ public class CrearCliente extends JFrame {
         cajaTexto1 = crearCajaDeTexto();
         cajaTexto2 = crearCajaDeTexto();
         cajaTexto3 = crearCajaDeTexto();
-        botonGuardar = crearBoton("Gurdar");
+        botonGuardar = crearBoton("Guardar");
         botonVolver = crearBoton("Volver");
         agregarComponentes();
         ventanaCrearCliente.revalidate();

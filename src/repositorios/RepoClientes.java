@@ -20,6 +20,9 @@ public class RepoClientes {
     private final Map<Integer, Cliente> clientes = new HashMap<>();
     private static final RepoClientes instancia = new RepoClientes();
 
+    /**
+     * contructor que recibe los datos guardados en el archivo
+     */
     public RepoClientes() {
         cargarDesdeArchivo();
     }
@@ -31,6 +34,15 @@ public class RepoClientes {
      */
     public Map<Integer, Cliente> getClientes() {
         return clientes;
+    }
+
+    /**
+     * metodo que retorna una estancia de la clase
+     *
+     * @return instancia de clase
+     */
+    public static RepoClientes getInstancia() {
+        return instancia;
     }
 
     /**
@@ -67,11 +79,9 @@ public class RepoClientes {
         }
     }
 
-    public static RepoClientes getInstancia() {
-        return instancia;
-    }
-
-    
+    /**
+     * metodo que guarda los datos en el archivo
+     */
     private void guardarEnArchivo() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_CLIENTES))) {
             for (Cliente c : clientes.values()) {
@@ -82,6 +92,9 @@ public class RepoClientes {
         }
     }
 
+    /**
+     * metodo que carga los datos guardados en el arcgivo
+     */
     private void cargarDesdeArchivo() {
         File archivo = new File(ARCHIVO_CLIENTES);
         if (!archivo.exists()) {
@@ -93,7 +106,7 @@ public class RepoClientes {
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
                 if (datos.length != 3) {
-                    continue;  
+                    continue;
                 }
                 int ci = Integer.parseInt(datos[0]);
                 String nombre = datos[1];

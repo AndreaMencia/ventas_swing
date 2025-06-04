@@ -16,7 +16,6 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
  */
 public class Ventana extends JFrame {
 
-    JPanel bordeSuperior;
     JPanel panelSuperior;
     JPanel panelCentral;
 
@@ -39,7 +38,6 @@ public class Ventana extends JFrame {
     /**
      * Metodo que inicializa los paneles en los que se agregaran los elementos o
      * componentes
-     *
      */
     private void iniciarPaneles() {
 

@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 import ventasgui.Ventana;
 
 /**
+ * Clase que proporciona una interfaz grafica para editar la informacion de un
+ * cliente
  *
  * @author Andrea Mencia y Miori Chiba, Segundo Semestre Ing. Informatica.
  */
@@ -28,6 +30,10 @@ public class EditarCliente {
     private JButton botonEdad;
     private JButton botonVolver;
 
+    /**
+     * Constructor que inicializa la ventana, configura los componentes graficas
+     * y asigna las acciones a los botones
+     */
     public EditarCliente() {
         ventanaEditarCliente = new Ventana(450, 500);
         iniciarComponentes();
@@ -35,6 +41,9 @@ public class EditarCliente {
         ventanaEditarCliente.setVisible(true);
     }
 
+    /**
+     * Inicializa todos los componentes graficas
+     */
     private void iniciarComponentes() {
         titulo = new JLabel("Editar Cliente");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 36));
@@ -54,6 +63,9 @@ public class EditarCliente {
 
     }
 
+    /**
+     * Crea y configuara la etiqueta
+     */
     private void crearEtiqueta() {
         etiqueta = new JLabel("Ingrese el numero de cedula:");
         etiqueta.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -65,6 +77,9 @@ public class EditarCliente {
         etiqueta.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
+    /**
+     * Crea y configura la caja de texto para ingresar el numero de cedula.
+     */
     private void crearCajaDeTexto() {
         cajaTexto = new JTextField();
         Dimension sizeCaja = new Dimension(400, 30);
@@ -74,6 +89,9 @@ public class EditarCliente {
         cajaTexto.setAlignmentX(Component.CENTER_ALIGNMENT);
     }
 
+    /**
+     * Agrega los componentes creados al pael central de la ventana.
+     */
     private void agregarComponentes() {
         ventanaEditarCliente.getPanelSuperior().add(titulo);
         agregarSeparador(20);
@@ -89,6 +107,12 @@ public class EditarCliente {
 
     }
 
+    /**
+     * Crea un boton.
+     *
+     * @param texto
+     * @return
+     */
     private JButton crearBoton(String texto) {
         JButton boton = new JButton(texto);
         boton.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -104,14 +128,9 @@ public class EditarCliente {
 
     }
 
-    private void agregarSeparador(int alto) {
-        ventanaEditarCliente.getPanelCentral().add(Box.createRigidArea(new Dimension(0, alto)));
-    }
-
-    private void agregarBoton(JButton boton) {
-        ventanaEditarCliente.getPanelCentral().add(boton);
-    }
-
+    /**
+     * Asigna las acciones que debe realizar cada boton.
+     */
     private void asignarAcciones() {
         // Cambiar nombre
         botonNombre.addActionListener(e -> {
@@ -162,10 +181,29 @@ public class EditarCliente {
                 JOptionPane.showMessageDialog(null, "Debe ingresar un numero valido.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+        //Volver al menu anterior
         botonVolver.addActionListener(e -> {
             ventanaEditarCliente.dispose();
             GestionClientes ventanaGestCliente = new GestionClientes();
         });
+    }
+
+    /**
+     * Agrega un espacio vertical entre componentes.
+     *
+     * @param alto
+     */
+    private void agregarSeparador(int alto) {
+        ventanaEditarCliente.getPanelCentral().add(Box.createRigidArea(new Dimension(0, alto)));
+    }
+
+    /**
+     * Agrega un boton al panel central
+     *
+     * @param boton
+     */
+    private void agregarBoton(JButton boton) {
+        ventanaEditarCliente.getPanelCentral().add(boton);
     }
 
 }

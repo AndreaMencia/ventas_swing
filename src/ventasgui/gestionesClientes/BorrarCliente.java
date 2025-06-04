@@ -46,7 +46,6 @@ public class BorrarCliente {
         botonBorrar = crearBoton("Borrar");
         botonVolver = crearBoton("Volver");
         agregarComponentes();
-        asignarAcciones();
         ventanaBorrarCliente.revalidate();
         ventanaBorrarCliente.repaint();
     }
@@ -98,6 +97,9 @@ public class BorrarCliente {
 
     }
 
+    /**
+     * metodo que ordena y agrega los componentes a la ventana
+     */
     private void agregarComponentes() {
         ventanaBorrarCliente.getPanelSuperior().add(titulo);
         agregarSeparador(30);
@@ -110,16 +112,19 @@ public class BorrarCliente {
         ventanaBorrarCliente.getPanelCentral().add(botonVolver);
     }
 
+    /**
+     * metodo que asigna las acciones de cada boton
+     */
     private void asignarAcciones() {
         botonBorrar.addActionListener(e -> {
             try {
                 String textoIngresado = cajaTexto.getText();
                 int nroDeCedula = Integer.parseInt(textoIngresado);
-                control.buscarCliente(nroDeCedula);
                 control.borrarCliente(nroDeCedula);
-                JOptionPane.showMessageDialog(null, "Se ha borrado con existo.");
+                JOptionPane.showMessageDialog(null, "Se ha borrado con exito.");
                 ventanaBorrarCliente.dispose();
                 GestionClientes ventanaGestCliente = new GestionClientes();
+
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Debe ingresar un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (IllegalArgumentException ex) {
@@ -132,6 +137,11 @@ public class BorrarCliente {
         });
     }
 
+    /**
+     * metodo que agrega una separacion entre componentes
+     *
+     * @param alto
+     */
     private void agregarSeparador(int alto) {
         ventanaBorrarCliente.getPanelCentral().add(Box.createRigidArea(new Dimension(0, alto)));
     }

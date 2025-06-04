@@ -36,13 +36,21 @@ public class RepoVentas {
         return ventas;
     }
 
-    public static RepoVentas getInstancia() {
-        return instancia;
-    }
-
+    /**
+     * contructor que recibe los datos guardados en el archivo
+     */
     public RepoVentas() {
         cargarDesdeArchivo(ARCHIVO_VENTAS);
         cargarDesdeArchivo(ARCHIVO_VENTAS_ANULADAS);
+    }
+
+    /**
+     * metodo que retorna una estancia de la clase
+     *
+     * @return instancia de clase
+     */
+    public static RepoVentas getInstancia() {
+        return instancia;
     }
 
     /**
@@ -91,35 +99,24 @@ public class RepoVentas {
     }
 
     /**
-     * Registra una venta anulada en el arch "ventas_anuladas.txt".
+     * Registra una venta anulada en el archivo "ventas_anuladas.txt".
      *
      * @param venta
      */
     private void registrarVentaAnulada(Venta venta) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_VENTAS_ANULADAS, true))) {
-            StringBuilder productosTexto = new StringBuilder();
-            for (Map.Entry<Producto, Integer> entry : venta.getProductos().entrySet()) {
-                productosTexto.append(entry.getKey().getNombre())
-                        .append(":")
-                        .append(entry.getValue())
-                        .append(";");
-            }
-
-//            if (!venta.getProductos().isEmpty()) {
-//                productosTexto.setLength(productosTexto.length() - 1);
-//            }
+        try (
+                PrintWriter pw = new PrintWriter(new FileWriter(ARCHIVO_VENTAS_ANULADAS, true))) {
+            // Se escribe una línea en el archivo con los datos de la venta anulada,
             pw.println(venta.getId() + ","
                     + venta.getCliente().getNumeroCI() + ","
                     + venta.getFechaDeCompra() + ","
                     + venta.getMonto());
         } catch (IOException e) {
+            // Si ocurre un error al escribir en el archivo, se muestra un mensaje de error en consola.
             System.err.println("Error al registrar venta anulada: " + e.getMessage());
         }
     }
 
-//    public ArrayList<Venta> listarVenta() {
-//        return new ArrayList<>(this.ventas.values());
-//    }
     /**
      * Lista todas las ventas anuladas que se encuentran registrados en el arch
      * "ventas_anuladas.txt".
@@ -130,23 +127,24 @@ public class RepoVentas {
     public List<Venta> listarVentasAnuladas(RepoClientes repoClientes) {
         List<Venta> anuladas = new ArrayList<>();
         File archivo = new File(ARCHIVO_VENTAS_ANULADAS);
+        //Si el archivo no existe, se retorna la lista vacia
         if (!archivo.exists()) {
             return anuladas;
         }
-
+        //Se intenta abrir el archivo 
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
+            //Se lee linea por linea el contenido del archivo
             while ((linea = br.readLine()) != null) {
-                String[] datos = linea.split(",", 5); // 5 columnas esperadas
-                if (datos.length != 5) {
+                String[] datos = linea.split(",", 4);
+                if (datos.length != 4) {
                     continue;
                 }
-
+                //Se intenta convertir los campos a sus respetivos tipos
                 int id = Integer.parseInt(datos[0]);
                 int ciCliente = Integer.parseInt(datos[1]);
                 LocalDate fecha = LocalDate.parse(datos[2]);
                 int monto = Integer.parseInt(datos[3]);
-                String productosTexto = datos[4];
 
                 Cliente cliente = repoClientes.obtenerClientePorCI(ciCliente);
                 if (cliente == null) {
@@ -154,31 +152,19 @@ public class RepoVentas {
                 }
 
                 Map<Producto, Integer> productos = new HashMap<>();
-                String[] items = productosTexto.split(";");
-                for (String item : items) {
-                    String[] partes = item.split(":");
-                    if (partes.length != 2) {
-                        continue;
-                    }
-
-                    String nombreProducto = partes[0];
-                    int cantidad = Integer.parseInt(partes[1]);
-
-                    Producto producto = RepoProductos.getInstancia().obtenerProductoPorNombre(nombreProducto);
-                    if (producto != null) {
-                        productos.put(producto, cantidad);
-                    }
-                }
                 Venta venta = new Venta(id, fecha, cliente, productos, monto);
+                //Se agrega la ventana anulada a la lista
                 anuladas.add(venta);
             }
         } catch (IOException | NumberFormatException e) {
             System.err.println("Error al leer ventas anuladas: " + e.getMessage());
         }
-
         return anuladas;
     }
 
+    /**
+     * metodo que guarda los datos en el archivo
+     */
     private void guardarEnArchivo(String archivo) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(archivo))) {
             for (Venta v : ventas.values()) {
@@ -204,6 +190,9 @@ public class RepoVentas {
         }
     }
 
+    /**
+     * metodo que carga los datos guardados en el arcgivo
+     */
     private void cargarDesdeArchivo(String archivo) {
         ventas.clear();
         File arch = new File(archivo);

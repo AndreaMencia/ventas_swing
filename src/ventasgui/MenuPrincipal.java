@@ -17,7 +17,6 @@ import javax.swing.JLabel;
 public class MenuPrincipal {
 
     private final Ventana ventanaMenuPrincipal;
-
     private JLabel etiqueta;
     private JButton btnGestProductos;
     private JButton btnGestClientes;

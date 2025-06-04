@@ -1,4 +1,5 @@
 package ventasgui.gestionesClientes;
+
 import controladores.ControladorClientes;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,10 +26,13 @@ import modelo.Cliente;
 import ventasgui.Ventana;
 
 /**
- *Vetana grafica que permite vizualizar todos los clientes registrados en forma de tabla.
+ * Vetana grafica que permite vizualizar todos los clientes registrados en forma
+ * de tabla.
+ *
  * @author Andrea Mencia y Miori Chiba, Segundo Semestre Ing. Informatica.
  */
 public class ListarClientes extends JFrame {
+
     //instancia de ventana personalizada
     private final Ventana ventanaLista;
     private final ControladorClientes control;
@@ -41,19 +44,22 @@ public class ListarClientes extends JFrame {
     private JScrollPane scrollPane;
     private JButton btnVolver;
     private JComboBox<String> comboOrden;
-    private TableRowSorter<TableModel> sorter; 
-   /**
-    * Inicializa los componentes graficos y muestra la ventana
-    * @param control 
-    */
+    private TableRowSorter<TableModel> sorter;
+
+    /**
+     * Inicializa los componentes graficos y muestra la ventana
+     *
+     * @param control
+     */
     public ListarClientes(ControladorClientes control) {
         this.control = control;
-        ventanaLista = new Ventana(450, 550); 
+        ventanaLista = new Ventana(450, 550);
         iniciarComponente();
         ventanaLista.setVisible(true);
     }
+
     /**
-     * Crea y configura cada componente de la interfaz grafica 
+     * Crea y configura cada componente de la interfaz grafica
      */
     private void iniciarComponente() {
         titulo = new JLabel("Lista de Clientes");
@@ -68,57 +74,61 @@ public class ListarClientes extends JFrame {
         agregarComponente();
         asignarAccion();
     }
+
     /**
      * Define el modelo de la tabla y llena con datos del controlador
-     * */
+     *
+     */
     private void tabla() {
-    DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return false;
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        Map<Integer, Cliente> mapaClientes = control.getMapaClientes();
+
+        // Convertir a lista y ordenar con Comparator (tipado explícito)
+        List<Map.Entry<Integer, Cliente>> listaClientes = new ArrayList<>(mapaClientes.entrySet());
+        listaClientes.sort(Comparator.comparing((Map.Entry<Integer, Cliente> entry) -> entry.getValue().getNombre()));
+
+        // Agregar al modelo
+        for (Map.Entry<Integer, Cliente> entry : listaClientes) {
+            Cliente cliente = entry.getValue();
+            Object[] fila = {entry.getKey(), cliente.getNombre(), cliente.getEdad()};
+            modelo.addRow(fila);
         }
-    };
 
-    Map<Integer, Cliente> mapaClientes = control.getMapaClientes();
+        tabla = new JTable(modelo);
 
-    // Convertir a lista y ordenar con Comparator (tipado explícito)
-    List<Map.Entry<Integer, Cliente>> listaClientes = new ArrayList<>(mapaClientes.entrySet());
-    listaClientes.sort(Comparator.comparing((Map.Entry<Integer, Cliente> entry) -> entry.getValue().getNombre()));
+        // Agregar sorter e integrarlo con la tabla
+        sorter = new TableRowSorter<>(modelo);
+        tabla.setRowSorter(sorter);
 
-    // Agregar al modelo
-    for (Map.Entry<Integer, Cliente> entry : listaClientes) {
-        Cliente cliente = entry.getValue();
-        Object[] fila = {entry.getKey(), cliente.getNombre(), cliente.getEdad()};
-        modelo.addRow(fila);
+        tabla.setFillsViewportHeight(true);
+        tabla.setRowHeight(30);
+        tabla.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        tabla.setBackground(new Color(255, 255, 199));
+        tabla.setForeground(Color.BLACK);
+        tabla.setGridColor(Color.LIGHT_GRAY);
+
+        JTableHeader encabezado = tabla.getTableHeader();
+        encabezado.setBackground(new Color(153, 0, 0));
+        encabezado.setForeground(Color.WHITE);
+        encabezado.setFont(new Font("Monospaced", Font.BOLD, 16));
+        ((DefaultTableCellRenderer) encabezado.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
+
+        scrollPane = new JScrollPane(tabla);
     }
 
-    tabla = new JTable(modelo);
-
-    // Agregar sorter e integrarlo con la tabla
-    sorter = new TableRowSorter<>(modelo);
-    tabla.setRowSorter(sorter);
-
-    tabla.setFillsViewportHeight(true);
-    tabla.setRowHeight(30);
-    tabla.setFont(new Font("Monospaced", Font.PLAIN, 14));
-    tabla.setBackground(new Color(255, 255, 199));
-    tabla.setForeground(Color.BLACK);
-    tabla.setGridColor(Color.LIGHT_GRAY);
-
-    JTableHeader encabezado = tabla.getTableHeader();
-    encabezado.setBackground(new Color(153, 0, 0));
-    encabezado.setForeground(Color.WHITE);
-    encabezado.setFont(new Font("Monospaced", Font.BOLD, 16));
-    ((DefaultTableCellRenderer) encabezado.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
-
-    scrollPane = new JScrollPane(tabla);
-}
-     /**
-    * Crea y devuelve un botón estilizado con el texto proporcionado.
-    * @param texto Texto a mostrar en el botón.
-    * @return JButton con fuente personalizada.
-    */
-    private JButton crearBoton(String texto) { 
+    /**
+     * Crea y devuelve un botón estilizado con el texto proporcionado.
+     *
+     * @param texto Texto a mostrar en el botón.
+     * @return JButton con fuente personalizada.
+     */
+    private JButton crearBoton(String texto) {
         JButton boton = new JButton(texto);
         boton.setFont(new Font("Segoe UI", Font.BOLD, 18));
         boton.setBackground(new Color(255, 165, 110));
@@ -133,6 +143,7 @@ public class ListarClientes extends JFrame {
 
         return boton;
     }
+
     /**
      * Agrega los componentes visuales al panel
      */
@@ -145,6 +156,7 @@ public class ListarClientes extends JFrame {
         ventanaLista.getPanelCentral().add(Box.createRigidArea(new Dimension(0, 15)));
         ventanaLista.getPanelCentral().add(btnVolver);
     }
+
     /**
      * Define acciones para el boton
      */
@@ -159,7 +171,7 @@ public class ListarClientes extends JFrame {
             if ("Ordenar por nombre".equals(seleccion)) {
                 sorter.setSortKeys(List.of(new RowSorter.SortKey(1, SortOrder.ASCENDING)));
             } else if ("Ordenar por edad".equals(seleccion)) {
-                sorter.setSortKeys(List.of(new RowSorter.SortKey(2, SortOrder.ASCENDING))); 
+                sorter.setSortKeys(List.of(new RowSorter.SortKey(2, SortOrder.ASCENDING)));
             }
         });
     }

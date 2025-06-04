@@ -15,10 +15,18 @@ public class RepoProductos {
     Map<Integer, Producto> productos = new HashMap<>();
     private static final RepoProductos instancia = new RepoProductos();
 
+    /**
+     * contructor que recibe los datos guardados en el archivo
+     */
     public RepoProductos() {
         cargarDesdeArchivo();
     }
 
+    /**
+     * metodo que retorna una estancia de la clase
+     *
+     * @return instancia de clase
+     */
     public static RepoProductos getInstancia() {
         return instancia;
     }
@@ -53,6 +61,13 @@ public class RepoProductos {
         return productos.get(cod);
     }
 
+    /**
+     * metodo que recibe como parametro el nombre de un producto y retorna el
+     * producto asociado a el
+     *
+     * @param nombre
+     * @return
+     */
     public Producto obtenerProductoPorNombre(String nombre) {
         for (Producto p : productos.values()) {
             if (p.getNombre().equalsIgnoreCase(nombre)) {
@@ -75,6 +90,9 @@ public class RepoProductos {
         guardarEnArchivo();
     }
 
+    /**
+     * metodo que guarda los datos en el archivo
+     */
     private void guardarEnArchivo() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(ARCHIVO))) {
             for (Producto p : productos.values()) {
@@ -85,6 +103,9 @@ public class RepoProductos {
         }
     }
 
+    /**
+     * metodo que carga los datos guardados en el arcgivo
+     */
     private void cargarDesdeArchivo() {
         File archivo = new File(ARCHIVO);
         if (!archivo.exists()) {
